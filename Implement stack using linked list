@@ -1,0 +1,85 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdbool.h>
+
+typedef struct Node {
+    int data;
+    struct Node* next;
+} Node;
+
+typedef struct Stack {
+    Node* top;
+    int count;
+
+void initStack(Stack* s) {
+    s->top = NULL;
+    s->count = 0;
+}
+
+bool isEmpty(Stack* s) {
+    return s->top == NULL;
+}
+
+void push(Stack* s, int x) {
+    Node* newNode = (Node*)malloc(sizeof(Node));
+    newNode->data = x;
+    newNode->next = s->top;
+    s->top = newNode;
+    s->count++;
+}
+
+void pop(Stack* s) {
+    if (isEmpty(s))
+        return; 
+    Node* temp = s->top;
+    s->top = s->top->next;
+    free(temp);
+    s->count--;
+}
+
+int peek(Stack* s) {
+    if (isEmpty(s))
+        return -1;
+    return s->top->data;
+}
+
+int size(Stack* s) {
+    return s->count;
+}
+
+void processQueries(int queries[][2], int q) {
+    Stack s;
+    initStack(&s);
+
+    for (int i = 0; i < q; i++) {
+        int type = queries[i][0];
+        int val = queries[i][1];
+
+        switch(type) {
+            case 1: 
+                push(&s, val);
+                break;
+            case 2:
+                pop(&s);
+                break;
+            case 3:
+                printf("%d\n", peek(&s));
+                break;
+            case 4: 
+                printf("%s\n", isEmpty(&s) ? "true" : "false");
+                break;
+            case 5: 
+                printf("%d\n", size(&s));
+                break;
+        }
+    }
+}
+
+int main() {
+    int queries[][2] = {{1, 5}, {1, 3}, {1, 4}, {3, 0}, {2, 0}, {5, 0}, {4, 0}};
+    int q = 7;
+
+    processQueries(queries, q);
+
+    return 0;
+}
