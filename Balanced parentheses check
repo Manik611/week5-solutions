@@ -1,0 +1,67 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <stdbool.h>
+
+typedef struct Node {
+    char data;
+    struct Node* next;
+} Node;
+
+void push(Node** top, char c) {
+    Node* newNode = (Node*)malloc(sizeof(Node));
+    newNode->data = c;
+    newNode->next = *top;
+    *top = newNode;
+}
+
+// Stack pop
+void pop(Node** top) {
+    if (*top == NULL) return;
+    Node* temp = *top;
+    *top = (*top)->next;
+    free(temp);
+}
+
+char peek(Node* top) {
+    if (top == NULL) return '\0';
+    return top->data;
+}
+bool isEmpty(Node* top) {
+    return top == NULL;
+}
+
+char* isBalanced(char* s) {
+    Node* stack = NULL;
+    for (int i = 0; s[i] != '\0'; i++) {
+        char c = s[i];
+        if (c == '(' || c == '[' || c == '{') {
+            push(&stack, c);
+        } else {
+            if (isEmpty(stack)) return "NO";
+
+            char topChar = peek(stack);
+            if ((c == ')' && topChar == '(') ||
+                (c == ']' && topChar == '[') ||
+                (c == '}' && topChar == '{')) {
+                pop(&stack);
+            } else {
+                return "NO";
+            }
+        }
+    }
+    return isEmpty(stack) ? "YES" : "NO";
+}
+
+int main() {
+    int n;
+    scanf("%d", &n);
+    char str[1000];
+    
+    for (int i = 0; i < n; i++) {
+        scanf("%s", str);
+        printf("%s\n", isBalanced(str));
+    }
+    return 0;
+}
+
