@@ -1,0 +1,71 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+typedef struct Stack {
+    int* arr;
+    int top;
+    int capacity;
+} Stack;
+
+Stack* createStack(int n) {
+    Stack* s = (Stack*)malloc(sizeof(Stack));
+    s->arr = (int*)malloc(n * sizeof(int));
+    s->top = -1;
+    s->capacity = n;
+    return s;
+}
+
+int isEmpty(Stack* s) {
+    return s->top == -1;
+}
+
+void push(Stack* s, int val) {
+    s->arr[++(s->top)] = val;
+}
+
+int pop(Stack* s) {
+    if (!isEmpty(s)) return s->arr[(s->top)--];
+    return -1;
+}
+
+int peek(Stack* s) {
+    if (!isEmpty(s)) return s->arr[s->top];
+    return -1;
+}
+void nextGreaterElement(int arr[], int n, int nge[]) {
+    Stack* s = createStack(n);
+
+    for (int i = n - 1; i >= 0; i--) {
+     
+        while (!isEmpty(s) && peek(s) <= arr[i])
+            pop(s);
+
+        
+        if (isEmpty(s))
+            nge[i] = -1;
+        else
+            nge[i] = peek(s);
+
+       
+        push(s, arr[i]);
+    }
+
+    free(s->arr);
+    free(s);
+}
+
+// Example usage
+int main() {
+    int arr[] = {1, 3, 2, 4};
+    int n = sizeof(arr)/sizeof(arr[0]);
+    int nge[n];
+
+    nextGreaterElement(arr, n, nge);
+
+    printf("Next Greater Elements: ");
+    for (int i = 0; i < n; i++)
+        printf("%d ", nge[i]);
+    printf("\n");
+
+    return 0;
+}
