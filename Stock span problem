@@ -1,0 +1,67 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+typedef struct Stack {
+    int* arr;
+    int top;
+    int capacity;
+} Stack;
+
+Stack* createStack(int n) {
+    Stack* s = (Stack*)malloc(sizeof(Stack));
+    s->arr = (int*)malloc(n * sizeof(int));
+    s->top = -1;
+    s->capacity = n;
+    return s;
+}
+
+int isEmpty(Stack* s) {
+    return s->top == -1;
+}
+
+void push(Stack* s, int val) {
+    s->arr[++(s->top)] = val;
+}
+
+int pop(Stack* s) {
+    if (!isEmpty(s)) return s->arr[(s->top)--];
+    return -1;
+}
+
+int peek(Stack* s) {
+    if (!isEmpty(s)) return s->arr[s->top];
+    return -1;
+}
+void calculateSpan(int arr[], int n, int span[]) {
+    Stack* s = createStack(n);
+
+    for (int i = 0; i < n; i++) {
+   
+        while (!isEmpty(s) && arr[peek(s)] <= arr[i])
+            pop(s);
+
+        if (isEmpty(s))
+            span[i] = i + 1;
+        else
+            span[i] = i - peek(s);
+
+        push(s, i);
+    }
+
+    free(s->arr);
+    free(s);
+}
+int main() {
+    int arr[] = {100, 80, 90, 120};
+    int n = sizeof(arr)/sizeof(arr[0]);
+    int span[n];
+
+    calculateSpan(arr, n, span);
+
+    printf("Stock spans: ");
+    for (int i = 0; i < n; i++)
+        printf("%d ", span[i]);
+    printf("\n");
+
+    return 0;
+}
