@@ -1,0 +1,82 @@
+#include <stdio.h>
+#include <stdbool.h>
+
+#define MAX 1000  
+
+typedef struct Stack {
+    int arr[MAX];
+    int top;
+    int size; 
+} Stack;
+
+void initStack(Stack *s, int n) {
+    s->top = -1;
+    s->size = n;
+}
+
+bool isEmpty(Stack *s) {
+    return s->top == -1;
+}
+bool isFull(Stack *s) {
+    return s->top == s->size - 1;
+}
+
+void push(Stack *s, int x) {
+    if (isFull(s)) {
+        return;
+    }
+    s->top++;
+    s->arr[s->top] = x;
+}
+
+void pop(Stack *s) {
+    if (isEmpty(s)) {
+        return;
+    }
+    s->top--;
+}
+
+int peek(Stack *s) {
+    if (isEmpty(s)) {
+        return -1;
+    }
+    return s->arr[s->top];
+}
+
+void processQueries(int n, int queries[][2], int q) {
+    Stack s;
+    initStack(&s, n);
+
+    for (int i = 0; i < q; i++) {
+        int type = queries[i][0];
+        int val = queries[i][1];
+
+        switch (type) {
+            case 1: 
+                push(&s, val);
+                break;
+            case 2:
+                pop(&s);
+                break;
+            case 3: 
+                printf("%d\n", peek(&s));
+                break;
+            case 4: 
+                printf("%s\n", isEmpty(&s) ? "true" : "false");
+                break;
+            case 5: 
+                printf("%s\n", isFull(&s) ? "true" : "false");
+                break;
+        }
+    }
+}
+
+int main() {
+    int n = 3;
+    int queries[][2] = {{1, 5}, {1, 3}, {3, 0}, {2, 0}, {4, 0}, {5, 0}};
+    int q = 6;
+
+    processQueries(n, queries, q);
+
+    return 0;
+}
